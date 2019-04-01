@@ -11,18 +11,24 @@ MICRODNF_ROOT=$(pwd)/tmp/microdnfroot
 rm -rf $MICRODNF_ROOT
 mkdir -p $MICRODNF_ROOT/var/cache
 
-RUN_MICRODNF="chroot $MICRODNF_ROOT"
+if [ "$UID" != 0 ] ; then
+	FAKEROOT=fakeroot
+	FAKECHROOT=fakechroot
+fi
+RUN_MICRODNF="$FAKECHROOT chroot $MICRODNF_ROOT"
 
 cp -rp /var/cache/dnf $MICRODNF_ROOT/var/cache
-dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --noplugins install --downloadonly -y filesystem
+$FAKEROOT dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --noplugins install --downloadonly -y filesystem
 ( cd $MICRODNF_ROOT && find var/cache/dnf -name 'filesystem*.rpm' | xargs rpm2cpio | cpio -id )
 chmod -R u+w $MICRODNF_ROOT
-dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --disableplugin='*' install -y microdnf
+$FAKECHROOT $FAKEROOT dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --disableplugin='*' install -y microdnf
 
 if ! [ -f $MICRODNF_ROOT/usr/lib/os-release ] ; then
 	cp /usr/lib/os-release $MICRODNF_ROOT/usr/lib/
 fi
-( cd / && tar cf - ./dev/null ./etc/resolv.conf ) | ( cd $MICRODNF_ROOT && tar xvf - )
+if [ -z "$FAKEROOT" ] ; then
+	( cd / && tar cf - ./dev/null ./etc/resolv.conf ) | ( cd $MICRODNF_ROOT && tar xvf - )
+fi
 $RUN_MICRODNF update-ca-trust
 
 cp swidtags_plugin.so $MICRODNF_ROOT/usr/lib64/libdnf/plugins/
