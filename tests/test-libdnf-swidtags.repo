@@ -1,0 +1,3 @@
+[test-libdnf-swidtags]
+baseurl=/repo
+gpgcheck=0

@@ -1,0 +1,26 @@
+language: generic
+
+sudo: required
+
+services:
+- docker
+
+install: true
+
+stages:
+- build-and-test
+
+matrix:
+  include:
+    - stage: build-and-test
+      env: fedora=30
+    - stage: build-and-test
+      env: fedora=29
+
+before_script:
+- if test -n "$fedora" ; then sed -i "s#^FROM.*#FROM registry.fedoraproject.org/fedora:$fedora#" tests/Dockerfile ; fi
+
+script:
+- docker build -t libdnf-plugin-swidtags -f tests/Dockerfile .
+- docker run --name libdnf-plugin-swidtags -d libdnf-plugin-swidtags sleep 600
+- docker exec libdnf-plugin-swidtags make swidtags_plugin.so test
