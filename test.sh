@@ -19,6 +19,10 @@ dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )"
 chmod -R u+w $MICRODNF_ROOT
 dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --disableplugin='*' install -y microdnf
 
+if ! [ -f $MICRODNF_ROOT/usr/lib/os-release ] ; then
+	cp /usr/lib/os-release $MICRODNF_ROOT/usr/lib/
+fi
+
 cp swidtags_plugin.so $MICRODNF_ROOT/usr/lib64/libdnf/plugins/
 $RUN_MICRODNF microdnf install zsh
 $RUN_MICRODNF microdnf remove zsh
