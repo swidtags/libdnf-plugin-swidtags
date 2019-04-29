@@ -29,6 +29,11 @@ fi
 if [ -z "$FAKEROOT" ] ; then
 	( cd / && tar cf - ./dev/null ./etc/resolv.conf ) | ( cd $MICRODNF_ROOT && tar xvf - )
 fi
+if [ -n "$FAKECHROOT" ] ; then
+	$RUN_MICRODNF ln -sf ../lib64/libpeas-1.0.so.0 /usr/lib/libpeas-1.0.so.0
+	$RUN_MICRODNF ln -sf ../lib64/libgirepository-1.0.so.1 /usr/lib/libgirepository-1.0.so.1
+fi
+
 $RUN_MICRODNF update-ca-trust
 
 cp swidtags_plugin.so $MICRODNF_ROOT/usr/lib64/libdnf/plugins/
