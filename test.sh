@@ -14,6 +14,9 @@ mkdir -p $MICRODNF_ROOT/var/cache
 RUN_MICRODNF="chroot $MICRODNF_ROOT"
 
 cp -rp /var/cache/dnf $MICRODNF_ROOT/var/cache
+dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --noplugins install --downloadonly -y filesystem
+( cd $MICRODNF_ROOT && find var/cache/dnf -name 'filesystem*.rpm' | xargs rpm2cpio | cpio -id )
+chmod -R u+w $MICRODNF_ROOT
 dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --disableplugin='*' install -y microdnf
 
 cp swidtags_plugin.so $MICRODNF_ROOT/usr/lib64/libdnf/plugins/
