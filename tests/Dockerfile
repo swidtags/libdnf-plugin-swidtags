@@ -6,3 +6,4 @@ RUN make srpm
 RUN dnf builddep -y *.src.rpm
 RUN rpm -Uvh *.src.rpm
 RUN rpmbuild -ba /root/rpmbuild/SPECS/*.spec
+RUN ln -s $( ls /root/rpmbuild/RPMS/*/*.x86_64.rpm | grep -v debug ) libdnf-plugin-swidtags.rpm
