@@ -4,13 +4,13 @@ all: swidtags_plugin
 swidtags_plugin: swidtags_plugin.so
 
 swidtags_plugin.so: swidtags_plugin.c
-	gcc -g -fPIC -shared -I/usr/include/libxml2 -I/usr/include/glib-2.0 -I/lib64/glib-2.0/include -Wcast-align -Wno-uninitialized -Wredundant-decls -Wwrite-strings -Wformat-nonliteral -Wmissing-format-attribute -Wsign-compare -Wtype-limits -Wuninitialized -Wall -Werror=implicit-function-declaration -Wl,--as-needed -Wmissing-prototypes -Waggregate-return -Wshadow -o swidtags_plugin.so swidtags_plugin.c
+	gcc -g -fPIC -shared $$( pkgconf --cflags libxml-2.0 glib-2.0 ) -Wcast-align -Wno-uninitialized -Wredundant-decls -Wwrite-strings -Wformat-nonliteral -Wmissing-format-attribute -Wsign-compare -Wtype-limits -Wuninitialized -Wall -Werror=implicit-function-declaration -Wl,--as-needed -Wmissing-prototypes -Waggregate-return -Wshadow -o swidtags_plugin.so swidtags_plugin.c
 
 test:
 	./test.sh
 
 install: swidtags_plugin.so
-	cp swidtags_plugin.so /usr/lib64/libdnf/plugins/
+	cp swidtags_plugin.so /usr/lib*/libdnf/plugins/
 
 clean:
 	rm -rf $(shell cat .gitignore)

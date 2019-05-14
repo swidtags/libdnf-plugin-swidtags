@@ -7,6 +7,7 @@ URL: https://github.com/swidtags/%{name}
 Source0: https://github.com/swidtags/%{name}/releases/download/%{name}-%{version}/%{name}-%{version}.tar.gz
 License: LGPLv2
 
+BuildRequires: pkgconf
 BuildRequires: make
 BuildRequires: gcc
 BuildRequires: libdnf-devel
