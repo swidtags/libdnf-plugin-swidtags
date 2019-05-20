@@ -18,9 +18,8 @@ clean:
 VERSION := $(shell rpm -q --qf '%{name}-%{version}\n' --specfile *.spec 2> /dev/null | head -1)
 
 srpm:
-	mkdir -p .source/$(VERSION) && cp -rp * .source/$(VERSION) && cd .source && tar cvzf $(VERSION).tar.gz $(VERSION)
-	rpmbuild -D '_srcrpmdir $(CURDIR)' -D '_sourcedir .source' -bs *.spec
-	rm -rf .source
+	tar c --transform="s#^#$(VERSION)/#" --exclude-from=.dockerignore -vzf $(VERSION).tar.gz *
+	rpmbuild -D '_srcrpmdir .' -D '_sourcedir .' -bs *.spec
 
 .PHONY: swidtags_plugin install test clean
 

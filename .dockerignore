@@ -1,4 +1,5 @@
 .git
-.source
 swidtags_plugin.so
 tmp
+*.rpm
+*.tar.gz
