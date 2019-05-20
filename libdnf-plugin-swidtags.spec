@@ -12,8 +12,8 @@ BuildRequires: make
 BuildRequires: gcc
 BuildRequires: libdnf-devel
 # The following BuildRequires are only needed for check
-BuildRequires: dnf
-BuildRequires: tar
+# BuildRequires: dnf
+# BuildRequires: tar
 
 Requires: libdnf
 
