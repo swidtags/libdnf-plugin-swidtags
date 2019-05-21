@@ -38,4 +38,6 @@ install -m 755 swidtags_plugin.so %{buildroot}%{_libdir}/libdnf/plugins/
 # make test
 
 %files
+%doc README.md
+%license LICENSE
 %{_libdir}/libdnf/plugins/swidtags_plugin.so
