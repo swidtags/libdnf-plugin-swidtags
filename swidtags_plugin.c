@@ -350,7 +350,7 @@ static void add_swidtag_files_from_repo(const gchar * filename, GHashTable * rep
 			|| xmlStrcmp(xmlTextReaderConstNamespaceUri(reader), SWIDTAGLIST_XMLNS)) {
 			continue;
 		}
-		const xmlChar * pkgid = xmlTextReaderGetAttribute(reader, (const xmlChar *)"pkgid");
+		xmlChar * pkgid = xmlTextReaderGetAttribute(reader, (const xmlChar *)"pkgid");
 		if (pkgid == NULL) {
 			debug(1, "%s: package element without @pkgid ignored\n", filename);
 			continue;
@@ -358,7 +358,7 @@ static void add_swidtag_files_from_repo(const gchar * filename, GHashTable * rep
 
 		char * package = g_hash_table_lookup(repo_pkgids, pkgid);
 		if (package == NULL) {
-			g_hash_table_remove(repo_pkgids, pkgid);
+			xmlFree(pkgid);
 			continue;
 		}
 
@@ -376,6 +376,7 @@ static void add_swidtag_files_from_repo(const gchar * filename, GHashTable * rep
 		}
 
 		g_hash_table_remove(repo_pkgids, pkgid);
+		xmlFree(pkgid);
 	}
 	xmlFreeDoc(orig_doc);
 
@@ -405,13 +406,15 @@ static char * dnf_package_get_checksum(rpmts ts, const char * nevra, const char 
 	if (sha == NULL) {
 		sha = headerGetString(h, RPMTAG_SHA1HEADER);
 	}
-	rpmdbFreeIterator(mi);
 	if (sha == NULL) {
+		rpmdbFreeIterator(mi);
 		debug(0, "%s %s has no SHA256HEADER\n", op, nevra);
 		return NULL;
 	}
 	debug(3, "%s %s SHA256HEADER %s\n", op, nevra, sha);
-	return g_strdup(sha);
+	char * ret = g_strdup(sha);
+	rpmdbFreeIterator(mi);
+	return ret;
 }
 
 static void append_to_added_packages(rpmts ts, GHashTable * hash, GPtrArray * packages, const char * op) {
@@ -440,6 +443,7 @@ static void append_to_added_packages(rpmts ts, GHashTable * hash, GPtrArray * pa
 		} else {
 			debug(5, "  no pkgid in repo %s\n", reponame);
 		}
+		g_free(checksum);
 	}
 	g_ptr_array_unref(packages);
 }
@@ -496,6 +500,7 @@ static void populate_remove_set_checksum_for(rpmts ts, GHashTable * hash,
 			g_hash_table_insert(hash, g_strdup(nevra), checksum);
 		}
 	}
+	g_ptr_array_unref(packages);
 }
 
 static void populate_remove_set_checksum(HyGoal goal, GHashTable * hash) {
@@ -537,6 +542,7 @@ static void remove_swidtag_files_for(GHashTable * hash, GPtrArray * packages, co
 		globfree(&globbuf);
 		g_string_free(glob_path, TRUE);
 	}
+	g_ptr_array_unref(packages);
 }
 
 static void remove_swidtag_files(HyGoal goal, GHashTable * hash) {
