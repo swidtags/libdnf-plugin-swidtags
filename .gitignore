@@ -1,4 +1,4 @@
 swidtags_plugin.so
 tmp
-*.rpm
-*.tar.gz
+libdnf-plugin-swidtags-*.rpm
+libdnf-plugin-swidtags-*.tar.gz
