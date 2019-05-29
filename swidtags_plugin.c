@@ -578,14 +578,14 @@ int pluginHook(PluginHandle * handle, PluginHookId id, DnfPluginHookData * hookD
 			break;
 		case PLUGIN_HOOK_ID_CONTEXT_PRE_TRANSACTION:
 			debug(3, "hook PLUGIN_HOOK_ID_CONTEXT_PRE_TRANSACTION\n");
-			HyGoal goal = dnf_context_get_goal(handle->context);
+			HyGoal goal = hookContextTransactionGetGoal(hookData);
 			if (goal) {
 				populate_remove_set_checksum(goal, handle->remove_set_checksum);
 			}
 			break;
 		case PLUGIN_HOOK_ID_CONTEXT_TRANSACTION:
 			debug(3, "hook PLUGIN_HOOK_ID_CONTEXT_TRANSACTION\n");
-			goal = dnf_context_get_goal(handle->context);
+			goal = hookContextTransactionGetGoal(hookData);
 			if (goal) {
 				remove_swidtag_files(goal, handle->remove_set_checksum);
 				add_swidtag_files(handle->context, goal);
