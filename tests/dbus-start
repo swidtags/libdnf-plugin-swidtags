@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+set -x
+
+mkdir -p /run/dbus
+rm -f /run/dbus/system_bus_socket
+/usr/bin/dbus-daemon --system --fork --nosyslog --print-address --address=unix:path=/run/dbus/daemon_socket
+ln -s daemon_socket /run/dbus/system_bus_socket

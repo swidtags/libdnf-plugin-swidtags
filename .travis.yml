@@ -28,4 +28,5 @@ script:
 - docker exec libdnf-plugin-swidtags rpm -Uvh libdnf-plugin-swidtags.rpm
 - docker exec libdnf-plugin-swidtags mkdir the-tests
 - docker exec libdnf-plugin-swidtags cp -rp Makefile test.sh tests the-tests/
-- docker exec libdnf-plugin-swidtags make -C the-tests test TEST_INSTALLED=true
+- docker exec libdnf-plugin-swidtags tests/dbus-start
+- docker exec -t libdnf-plugin-swidtags make -C the-tests test TEST_INSTALLED=true
