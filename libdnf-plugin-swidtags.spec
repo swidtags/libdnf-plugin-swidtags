@@ -20,7 +20,7 @@ BuildRequires: dnf
 BuildRequires: tar
 %endif
 
-Requires: libdnf
+Requires: libdnf >= 0.24.1
 
 %description
 The libdnf plugin swidtags_plugin.so can be used to keep the SWID
