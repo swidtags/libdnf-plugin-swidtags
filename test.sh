@@ -10,7 +10,7 @@ export LIBDNF_PLUGIN_SWIDTAGS_DEBUG=10
 if [ "$TEST_INSTALLED" = true ] ; then
 	MICRODNF_ROOT=/
 	BIN=/usr/bin
-	dnf install -y microdnf PackageKit
+	rpm -q microdnf PackageKit || dnf install -y microdnf PackageKit
 else
 	MICRODNF_ROOT=$(pwd)/tmp/microdnfroot/
 	rm -rf $MICRODNF_ROOT
