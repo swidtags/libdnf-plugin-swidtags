@@ -59,13 +59,5 @@ echo "528f1308b12cc7770f0d26451e5511f7099695f3c343e97d1c4b5b1fea47563f ${MICRODN
 $RUN_MICRODNF microdnf remove hello
 ( ! test -f ${MICRODNF_ROOT}usr/lib/swidtag/example^2ftest/example^2ftest.hello-2.0-1.x86_64-rpm-ef920781af3bf072ae9888eec3de1c589143101dff9cc0b561468d395fb766d9.swidtag)
 
-if [ "$TEST_INSTALLED" = true ] ; then
-	pkcon install -y hello
-	ls -la /usr/lib/swidtag/example^2ftest/example^2ftest.hello-2.0-1.x86_64-rpm-ef920781af3bf072ae9888eec3de1c589143101dff9cc0b561468d395fb766d9.swidtag
-	echo "528f1308b12cc7770f0d26451e5511f7099695f3c343e97d1c4b5b1fea47563f /usr/lib/swidtag/example^2ftest/example^2ftest.hello-2.0-1.x86_64-rpm-ef920781af3bf072ae9888eec3de1c589143101dff9cc0b561468d395fb766d9.swidtag" | sha256sum -c
-	pkcon remove -y hello
-	( ! test -f /usr/lib/swidtag/example^2ftest/example^2ftest.hello-2.0-1.x86_64-rpm-ef920781af3bf072ae9888eec3de1c589143101dff9cc0b561468d395fb766d9.swidtag)
-fi
-
 echo OK $0.
 
