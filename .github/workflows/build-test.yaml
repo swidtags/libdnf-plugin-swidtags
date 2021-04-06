@@ -1,0 +1,37 @@
+name: Build and test libdnf-plugin-swidtags
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '12 6 4 * *'
+
+jobs:
+  build:
+    name: Run tests in container
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ fedora-rawhide, fedora-32, fedora-31 ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set the right OS in the Dockerfile
+        run: sed -i "s#^FROM.*#FROM $( echo ${{ matrix.os }} | sed 's#^fedora-#registry.fedoraproject.org/fedora:#' )#" tests/Dockerfile
+      - name: Build image
+        run: docker build -t libdnf-plugin-swidtags -f tests/Dockerfile .
+      - name: Run container
+        run: docker run --name libdnf-plugin-swidtags --rm -d libdnf-plugin-swidtags sleep 600
+      - name: Run tests in the container
+        run: docker exec libdnf-plugin-swidtags make swidtags_plugin.so test
+      - name: Install the built rpm
+        run: docker exec libdnf-plugin-swidtags rpm -Uvh libdnf-plugin-swidtags.rpm
+      - name: Prepare test directory for TEST_INSTALLED run
+        run: docker exec libdnf-plugin-swidtags mkdir the-tests
+      - name: Prepare test directory for TEST_INSTALLED run
+        run: docker exec libdnf-plugin-swidtags cp -rp Makefile test.sh tests the-tests/
+      - name: For PackageKit testing, dbus needs to be running
+        run: docker exec libdnf-plugin-swidtags tests/dbus-start
+      - name: TEST_INSTALLED=true
+        run: docker exec -t libdnf-plugin-swidtags make -C the-tests test TEST_INSTALLED=true
