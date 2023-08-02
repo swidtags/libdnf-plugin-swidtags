@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora
+FROM registry.fedoraproject.org/fedora:37
 RUN dnf install -y rpm-build make "dnf-command(builddep)" /usr/bin/dbus-daemon PackageKit polkit fakechroot /usr/bin/getopt
 COPY . /src/
 WORKDIR /src
