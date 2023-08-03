@@ -1,5 +1,5 @@
 FROM registry.fedoraproject.org/fedora
-RUN dnf install -y rpm-build make "dnf-command(builddep)" /usr/bin/dbus-daemon PackageKit polkit
+RUN dnf install -y rpm-build make "dnf-command(builddep)" /usr/bin/dbus-daemon PackageKit polkit fakechroot /usr/bin/getopt
 COPY . /src/
 WORKDIR /src
 RUN make srpm

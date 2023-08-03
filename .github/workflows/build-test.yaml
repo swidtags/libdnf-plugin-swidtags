@@ -22,7 +22,7 @@ jobs:
       - name: Build image
         run: docker build -t libdnf-plugin-swidtags -f tests/Dockerfile .
       - name: Run container
-        run: docker run --name libdnf-plugin-swidtags --rm -d libdnf-plugin-swidtags sleep 600
+        run: docker run --name libdnf-plugin-swidtags -e FAKECHROOT=fakechroot --rm -d libdnf-plugin-swidtags sleep 600
       - name: Run tests in the container
         run: docker exec libdnf-plugin-swidtags make swidtags_plugin.so test
       - name: Install the built rpm
