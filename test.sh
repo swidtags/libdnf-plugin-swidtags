@@ -32,7 +32,7 @@ else
 		cp /usr/lib/os-release ${MICRODNF_ROOT}usr/lib/
 	fi
 	if [ -z "$FAKEROOT" ] ; then
-		( cd / && tar cf - ./dev/null ./etc/resolv.conf ) | ( cd $MICRODNF_ROOT && tar xvf - )
+		cp /etc/resolv.conf ${MICRODNF_ROOT}etc/
 	fi
 	if [ -n "$FAKECHROOT" ] ; then
 		(
