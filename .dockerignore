@@ -1,5 +1,5 @@
 .git
 swidtags_plugin.so
 tmp
-libdnf-plugin-swidtags-*.rpm
+libdnf5-plugin-swidtags-*.rpm
 libdnf-plugin-swidtags-*.tar.gz
