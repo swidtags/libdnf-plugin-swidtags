@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include <libdnf5/plugin/iplugin.hpp>
 #include <libdnf5/base/base.hpp>
 
 #include <libxml++/parsers/textreader.h>
@@ -41,8 +42,8 @@ using namespace libdnf5;
 
 namespace {
 
-constexpr const char * PLUGIN_NAME = "swidtags";
-constexpr plugin::Version PLUGIN_VERSION{5, 0, 0};
+constexpr const char * PLUGIN_NAME { "swidtags" };
+constexpr plugin::Version PLUGIN_VERSION{.major = 5, .minor = 2, .micro = 0};
 
 constexpr const char * attrs[]{"author.name", "author.email", "description", nullptr};
 constexpr const char * attrs_value[]{"Jan Pazdziora", "jan.pazdziora@code.adelton.com", "Plugin to keep SWID tags in sync with rpms."};
@@ -290,7 +291,7 @@ static void remove_swidtag_file(const std::string &checksum, const int debug_lev
 
 class Swidtags : public plugin::IPlugin {
 public:
-	Swidtags(libdnf5::Base & base, libdnf5::ConfigParser &) : IPlugin(base) {}
+	Swidtags(libdnf5::plugin::IPluginData & data, libdnf5::ConfigParser &) : IPlugin(data) {}
 	virtual ~Swidtags() {
 		removed_packages_checksums.clear();
 	}
@@ -437,9 +438,9 @@ plugin::Version libdnf_plugin_get_version(void) {
 
 plugin::IPlugin * libdnf_plugin_new_instance(
 	[[maybe_unused]] LibraryVersion library_version,
-	libdnf5::Base & base,
+	libdnf5::plugin::IPluginData & data,
 	libdnf5::ConfigParser & parser) try {
-	return new Swidtags(base, parser);
+	return new Swidtags(data, parser);
 } catch (...) {
 	return nullptr;
 }

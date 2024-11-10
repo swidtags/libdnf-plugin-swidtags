@@ -1,5 +1,5 @@
-FROM registry.fedoraproject.org/fedora:38
-RUN dnf install -y rpm-build make "dnf-command(builddep)" fakechroot /usr/bin/getopt
+FROM registry.fedoraproject.org/fedora:41
+RUN dnf install -y rpm-build make fakechroot /usr/bin/getopt
 COPY . /src/
 WORKDIR /src
 RUN make srpm

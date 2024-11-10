@@ -4,7 +4,7 @@
 
 Summary: Keeping SWID tags in sync with rpms installed via libdnf5-based tools
 Name: libdnf5-plugin-swidtags
-Version: 5.0.0
+Version: 5.2.0
 Release: 0%{?dist}
 URL: https://github.com/swidtags/%{name}
 Source0: https://github.com/swidtags/libdnf-plugin-swidtags/releases/download/libdnf-plugin-swidtags-%{version}/%{name}-%{version}.tar.gz

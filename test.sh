@@ -22,11 +22,11 @@ else
 	fi
 	RUN_MICRODNF="$FAKECHROOT chroot $MICRODNF_ROOT"
 
-	cp -rp /var/cache/dnf ${MICRODNF_ROOT}var/cache
-	$FAKEROOT dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --noplugins install --downloadonly -y filesystem
-	( cd $MICRODNF_ROOT && find var/cache/dnf -name 'filesystem*.rpm' | xargs rpm2cpio | cpio -id )
+	cp -rp /var/cache/libdnf5 ${MICRODNF_ROOT}var/cache
+	$FAKEROOT dnf --use-host-config --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --noplugins install --downloadonly -y filesystem
+	( cd $MICRODNF_ROOT && find var/cache/libdnf5 -name 'filesystem*.rpm' | xargs rpm2cpio | cpio -id )
 	chmod -R u+w $MICRODNF_ROOT
-	$FAKECHROOT $FAKEROOT dnf --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --disableplugin='*' install -y microdnf
+	$FAKECHROOT $FAKEROOT dnf --use-host-config --releasever "$( rpm --qf '%{version}\n' -q --whatprovides system-release )" --installroot $MICRODNF_ROOT --setopt=tsflags=noscripts --disableplugin='*' install -y microdnf
 
 	if ! [ -f ${MICRODNF_ROOT}usr/lib/os-release ] ; then
 		cp /usr/lib/os-release ${MICRODNF_ROOT}usr/lib/
