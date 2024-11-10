@@ -1,4 +1,4 @@
-name: Build and test libdnf-plugin-swidtags
+name: Build and test libdnf5-plugin-swidtags
 
 on:
   push:
@@ -14,24 +14,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ fedora-37 ]
+        os: [ fedora-38, fedora-39, fedora-40 ]
     steps:
       - uses: actions/checkout@v2
       - name: Set the right OS in the Dockerfile
         run: sed -i "s#^FROM.*#FROM $( echo ${{ matrix.os }} | sed 's#^fedora-#registry.fedoraproject.org/fedora:#' )#" tests/Dockerfile
       - name: Build image
-        run: podman build -t libdnf-plugin-swidtags -f tests/Dockerfile .
+        run: podman build -t libdnf5-plugin-swidtags -f tests/Dockerfile .
       - name: Run container
-        run: podman run --name libdnf-plugin-swidtags -e FAKECHROOT=fakechroot --rm -d libdnf-plugin-swidtags sleep 600
+        run: podman run --name libdnf5-plugin-swidtags -e FAKECHROOT=fakechroot --rm -d libdnf5-plugin-swidtags sleep 600
       - name: Run tests in the container
-        run: podman exec libdnf-plugin-swidtags make swidtags_plugin.so test
+        run: podman exec libdnf5-plugin-swidtags make swidtags_plugin test
       - name: Install the built rpm
-        run: podman exec libdnf-plugin-swidtags rpm -Uvh libdnf-plugin-swidtags.rpm
+        run: podman exec libdnf5-plugin-swidtags rpm -Uvh libdnf5-plugin-swidtags.rpm
       - name: Prepare test directory for TEST_INSTALLED run
-        run: podman exec libdnf-plugin-swidtags mkdir the-tests
+        run: podman exec libdnf5-plugin-swidtags mkdir the-tests
       - name: Prepare test directory for TEST_INSTALLED run
-        run: podman exec libdnf-plugin-swidtags cp -rp Makefile test.sh tests the-tests/
-      - name: For PackageKit testing, dbus needs to be running
-        run: podman exec libdnf-plugin-swidtags tests/dbus-start
+        run: podman exec libdnf5-plugin-swidtags cp -rp Makefile test.sh tests the-tests/
       - name: TEST_INSTALLED=true
-        run: podman exec -t libdnf-plugin-swidtags make -C the-tests test TEST_INSTALLED=true
+        run: podman exec -t libdnf5-plugin-swidtags make -C the-tests test TEST_INSTALLED=true

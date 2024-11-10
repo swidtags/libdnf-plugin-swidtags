@@ -1,16 +1,19 @@
 
 all: swidtags_plugin
 
-swidtags_plugin: swidtags_plugin.so
+swidtags_plugin: dist/swidtags.so
 
-swidtags_plugin.so: swidtags_plugin.c
-	gcc -g -fPIC -shared $(shell pkgconf --cflags --libs libdnf libxml-2.0) -Wcast-align -Wno-uninitialized -Wredundant-decls -Wwrite-strings -Wformat-nonliteral -Wmissing-format-attribute -Wsign-compare -Wtype-limits -Wuninitialized -Wall -Werror=implicit-function-declaration -Wl,--as-needed -Wmissing-prototypes -Waggregate-return -Wshadow -o swidtags_plugin.so swidtags_plugin.c
+dist/swidtags.so: swidtags_plugin.cpp
+	rm -rf dist
+	mkdir dist
+	cmake -B dist
+	make -C dist
 
 test:
 	./test.sh
 
-install: swidtags_plugin.so
-	cp swidtags_plugin.so /usr/lib*/libdnf/plugins/
+install: dist/swidtags.so
+	cp dist/swidtags.so /usr/lib*/libdnf5/plugins/
 
 clean:
 	rm -rf $(shell cat .gitignore)
